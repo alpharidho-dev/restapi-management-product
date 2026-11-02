@@ -1,25 +1,25 @@
-import 'dotenv/config';
-import mysql from 'mysql2/promise';
-import { drizzle } from 'drizzle-orm/mysql2';
-import * as schema from './schema';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import taskRoutes from "./routes/task.route";
 
-const user = process.env.DB_USER || 'admin';
-const pass = process.env.DB_PASSWORD || 'admin123';
-const host = process.env.DB_HOST || '127.0.0.1';
-const name = process.env.DB_NAME || 'product_db';
+dotenv.config();
 
-const connectionUri = `mysql://${user}:${pass}@${host}:3306/${name}`;
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-const poolConnection = mysql.createPool(connectionUri);
+app.use(cors());
+app.use(express.json());
 
-export const db = drizzle(poolConnection, { schema, mode: 'default' });
+app.use("/tasks", taskRoutes);
 
-export const testConnection = async (): Promise<void> => {
-  try {
-    const conn = await poolConnection.getConnection();
-    console.log('Database connected');
-    conn.release();
-  } catch (err) {
-    console.error('Database connection failed:', err);
-  }
-};
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Endpoint tidak ditemukan",
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server berjalan di http://localhost:${PORT}`);
+});
