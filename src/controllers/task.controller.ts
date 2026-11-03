@@ -16,7 +16,7 @@ export const getAllTasks = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Berhasil mengambil semua data tasks",
-      data,
+      data: data,
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -31,13 +31,13 @@ export const getTaskById = async (req: Request, res: Response) => {
       .from("tasks")
       .select("*")
       .eq("id", id)
-      .single(); // .single() memastikan hanya 1 data yang diambil
+      .single();
 
     if (error || !data) {
       return res.status(404).json({ success: false, message: "Task tidak ditemukan" });
     }
 
-    res.status(200).json({ success: true, data });
+    res.status(200).json({ success: true, data: data });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -80,7 +80,7 @@ export const createTask = async (req: Request, res: Response) => {
     res.status(201).json({
       success: true,
       message: "Task berhasil ditambahkan",
-      data,
+      data: data,
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -109,7 +109,7 @@ export const updateTask = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: "Status hanya boleh 'pending' atau 'completed'" });
     }
 
-    // Handle Upload Image baru jika ada
+    // Handle Upload Image baru kalo misalnya ada
     let imageUrl = existingTask.image_url;
     let imagePublicId = existingTask.image_public_id;
 
@@ -144,7 +144,7 @@ export const updateTask = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Task berhasil diperbarui",
-      data,
+      data: data,
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -170,7 +170,7 @@ export const deleteTask = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Task berhasil dihapus",
-      data,
+      data: data,
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
