@@ -1,0 +1,14 @@
+import { Router } from "express";
+import authController from "../controllers/auth.controller";
+import maintenanceController from "../controllers/maintenance.controller";
+import { authenticateToken } from "../middlewares/auth.middleware";
+import { upload } from "../middlewares/upload";
+const router = Router();
+router.post("/auth/register", authController.register);
+router.post("/auth/login", authController.login);
+router.get("/maintenances", authenticateToken, maintenanceController.getAllMaintenances);
+router.get("/maintenances/:id", authenticateToken, maintenanceController.getMaintenanceById);
+router.post("/maintenances", authenticateToken, upload.single("image"), maintenanceController.createMaintenance);
+router.put("/maintenances/:id", authenticateToken, upload.single("image"), maintenanceController.updateMaintenance);
+router.delete("/maintenances/:id", authenticateToken, maintenanceController.deleteMaintenance);
+export default router;
